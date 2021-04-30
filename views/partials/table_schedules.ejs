@@ -1,0 +1,30 @@
+
+<div class="container p-0">
+<div class="table-responsive table-wrapper-scroll-y my-custom-scrollbar">
+<table class="table table-striped">
+    <thead class="thead-dark">
+      <tr class="text-center">
+        <th scope="col">User</th>
+        <th scope="col">Date</th>
+        <th scope="col">Starting time</th>
+        <th scope="col">Ending time</th>
+        
+      </tr>
+    </thead>
+    <tbody>
+      <% for (var i =0; i < schedules.length;  i++ ) { %>
+          <tr class="text-center">
+            <td class="w-25"> <a class="text-dark font-weight-bold" href="../user/<%= schedules[i].id %>"><%= schedules[i].email %></a></td>
+            <td class="w-25"><%= locals.dateFormat(schedules[i].s_date," dd/mm/yyyy") %> %></td>
+            <td class="w-25"><%= schedules[i].start_at%></td>
+            <td class="w-25"><%= schedules[i].end_at %></td>
+            
+          </tr>
+      <% } %>
+        
+        
+   
+    </tbody>
+  </table>
+</div>
+</div>

@@ -1,0 +1,85 @@
+<div class="mt-4 table-responsive table-wrapper-scroll-y my-custom-scrollbar">
+    <table class="table table-bordered">
+    <thead class="thead-dark">
+      <tr class="text-center">
+        <th scope="col">Date</th>
+        <th scope="col">Starting time</th>
+        <th scope="col">Ending time</th>        
+      </tr>
+    </thead>
+    <tbody id="popover-table">
+      <% for (var i=0;i<schedules.length;i++ ) { %>
+        <tr id="my-popover" class="text-center user-table">
+        <% if (locals.user === schedules[i].user_id) { %>
+          <script>
+              document.getElementsByTagName("tr")["<%=i%>"].setAttribute("data-toggle", "popover"); 
+              document.getElementsByTagName("tr")["<%=i%>"].setAttribute("data-id","<%=schedules[i].id%>"); 
+          </script>
+       
+        <% }  %>
+  
+            <td class="w-25"><%= dateFormat(schedules[i].s_date,"dd/mm/yyyy") %></td>
+            <td class="w-25"><%= schedules[i].start_at%></td>
+            <td class="w-25"><%= schedules[i].end_at %></td>
+          </tr>
+      <% } %>
+    </tbody>
+  </table>
+
+  <div class="container d-none" id="popover-content">
+    <div class="row ">
+      <div class="text-center ">
+        <form id="form-update" method="GET">
+        <button type="submit" class="popover-button btn btn-block btn-success button"><i class="fa fa-edit fa-lg"></i>Update</button>
+        </form>
+      </div>
+      <div class=" text-center ">
+        <form id="form-remove" method="GET">
+        <button type="submit" class="popover-button btn btn-block btn-danger button"><i class="fa fa-trash fa-lg"></i>Remove</button>
+          </form>
+      </div>
+    </div>
+  </div>
+ 
+ 
+  <script>
+   
+$(document).ready(function(){
+      
+      $("[data-toggle=popover]").popover({
+          "placement": 'bottom' 
+          , "html": true
+          , "container": 'body'
+          , "sanitize" : false
+          ,"content": function() {
+            return $('#popover-content').html();
+            }
+  });
+ 
+  $("[data-toggle=popover]").on('show.bs.popover', function (e) {
+    $("[data-toggle=popover]").not($(this)).popover('hide');
+
+    var id = $(e.target).data("id");
+    var url = "../schedule/delete/"+id;
+    document.getElementById("form-remove").setAttribute("action", url);
+    url = "../schedule/update/"+id;
+    document.getElementById("form-update").setAttribute("action", url);
+  });
+
+
+
+$("#popover-table").on('wheel', function(event){
+  $('[data-toggle=popover]').popover('hide');
+});
+
+$(window).on('wheel', function(event){
+  $('[data-toggle=popover]').popover('hide');
+});
+
+
+
+
+});
+
+ 
+    </script>

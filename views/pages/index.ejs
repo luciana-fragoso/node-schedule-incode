@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <%- include('../partials/head') %>
+  </head>
+
+  <body>
+    <%- include('../partials/navbar') %>
+    <div class="container-fluid bg-light">
+      <div class="main mx-auto">
+        <% if (user){ %>
+          <h5 class="subtitle text-dark text-center mb-4  mt-4 font-weight-bold">Check our schedules below</h5>
+          
+          <%- include('../partials/table_schedules') %>
+        <% } else { %>
+          <h3 class="subtitle text-center text-dark mt-5 mb-0 font-weight-bold">Welcome to our website </h3>
+          <h3 class="subtitle text-center text-dark mt-0 font-weight-bold">Please <span><a class="title-link text-dark" href="../login" >login</a></span> </h3>
+          <% } %>
+    </div>
+    </div>
+  </body>
+</html>

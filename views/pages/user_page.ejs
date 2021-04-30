@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <%- include('../partials/head') %>
+</head>
+<body>
+    <%- include('../partials/navbar') %>
+    <div class="container-fluid bg-light w-100">  
+        <div class="main mx-auto">
+            <h1 class="subtitle text-dark font-weight-bold mt-3 mb-1">My schedules</h1>
+            <div class="my-row">
+                <div class="my-column mr-5">
+                    <%- include('../partials/newSchedule') %>
+                </div>
+                <div class="my-column">
+                    <%- include('../partials/user_schedules') %>  
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

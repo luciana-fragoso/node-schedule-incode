@@ -1,0 +1,140 @@
+
+
+
+h1{
+  font-family: 'Saira Semi Condensed', sans-serif;
+}
+.nav-link{
+    font-size: 20px;
+    font-weight: bold;
+    color: #FBF3AB !important;
+}
+.main{
+  padding: 3%;
+  height: 100vh;
+}
+
+.title{
+    font-size: 24px;
+}
+.title-link,.title-link:hover,.title-link:active,.title-link:visited {
+  text-decoration: none;
+}
+
+.my-custom-scrollbar {
+  position: relative;
+  height: 350px;
+  overflow: auto;
+}
+.table-wrapper-scroll-y {
+  display: block;
+}
+
+.main {
+  width: 95% !important;
+}
+table thead th { 
+  position: sticky; 
+  top: 0; 
+  z-index: 1; 
+}
+.column-height{ 
+  height: 350px !important;
+}
+
+@media (min-width: 992px) {
+    
+  #sideNav {
+      text-align: center;
+      position: fixed;
+      top: 0;
+      left: 0;
+      display: flex;
+      flex-direction: column;
+      width: 245px;
+      height: 100vh;
+    }
+    #sideNav .navbar-brand {
+      display: flex;
+      margin: 100px auto 0;
+      padding: 0.5rem;
+    }
+    #sideNav .navbar-brand .img-profile {
+      max-width: 8rem;
+      max-height: 8rem;
+     
+     
+    }
+    #sideNav .navbar-collapse {
+      display: flex;
+      align-items: flex-start;
+      flex-grow: 0;
+      width: 100%;
+      margin-bottom: auto;
+    }
+    #sideNav .navbar-collapse .navbar-nav {
+      flex-direction: column;
+      width: 100%;
+    }
+    #sideNav .navbar-collapse .navbar-nav .nav-item {
+      display: block;
+    }
+   
+    #sideNav .navbar-collapse .navbar-nav .nav-item .nav-link {
+      display: block; 
+    }
+
+    .nav-item:hover{
+        background-color: #252728;
+    }
+
+    .main{
+      padding: 6% 0px 0px 245px !important;
+    }
+
+    .input-group{
+      width: 50% !important;      
+    }
+
+    .subtitle {
+      margin-bottom: 5%;
+    }
+
+  }
+
+  @media (max-width: 500px) {
+.new-schedule{
+  width: 90% !important;
+
+}
+  }
+
+  .my-row {
+    display: flex;
+  }
+
+  .my-column {
+    width: 45%;
+    
+  }
+
+  @media (max-width: 992px) {
+    .my-row {
+      display: block;
+    }
+  
+    .my-column {
+      width: 100%;
+    }
+  }
+
+  .user-table:hover {
+    cursor: pointer;
+    background-color: #D3D3D3;
+  }
+
+
+  .popover-button{
+    width: 125px !important;
+    margin: 3px !important;
+  }

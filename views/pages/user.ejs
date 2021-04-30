@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <%- include('../partials/head') %>
+  </head>
+
+  <body>
+    <%- include('../partials/navbar') %>
+    <div class="container-fluid bg-light w-100">
+      <div class="main mx-auto">
+      <% if (locals.user_detail) {%>
+      <a class="title-link"><h1 class="subtitle text-dark font-weight-bold mt-3">User Details</h1></a>
+      <h5>Firstname -  <span class="font-weight-normal"><%= locals.user_detail.firstname %></span></h5>
+      <h5>Lastname - <span class="font-weight-normal"><%= locals.user_detail.lastname %> </span></h5>
+      <h5>E-mail - <span class="font-weight-normal"><%= locals.user_detail.email %></span></h5>
+      <% } else { %>
+        <h2><%= locals.message %></h2>
+      <% } %>
+      <%- include('../partials/user_schedules') %>  
+    
+    </div>
+ </div>
+  </body>
+</html>
