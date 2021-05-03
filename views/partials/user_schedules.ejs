@@ -8,44 +8,51 @@
       </tr>
     </thead>
     <tbody id="popover-table">
-      <% for (var i=0;i<schedules.length;i++ ) { %>
-        <tr id="my-popover" class="text-center user-table">
-        <% if (locals.user === schedules[i].user_id) { %>
-          <script>
-              document.getElementsByTagName("tr")["<%=i%>"].setAttribute("data-toggle", "popover"); 
-              document.getElementsByTagName("tr")["<%=i%>"].setAttribute("data-id","<%=schedules[i].id%>"); 
-          </script>
-       
-        <% }  %>
-  
+      <% for (i=0;i<schedules.length;i++ ) { %>
+     
+        
+        <tr class="text-center user-table">
             <td class="w-25"><%= dateFormat(schedules[i].s_date,"dd/mm/yyyy") %></td>
             <td class="w-25"><%= schedules[i].start_at%></td>
             <td class="w-25"><%= schedules[i].end_at %></td>
           </tr>
+          <% if (locals.user === schedules[i].user_id) { %>     
+            <script>     
+                document.getElementsByTagName("tr")["<%=i+1%>"].setAttribute("data-toggle", "popover"); 
+                document.getElementsByTagName("tr")["<%=i+1%>"].setAttribute("data-id","<%=schedules[i].id%>");
+                document.getElementsByTagName("tr")["<%=i+1%>"].setAttribute("data-date","<%= dateFormat(schedules[i].s_date,'dd/mm/yyyy') %>");  
+                document.getElementsByTagName("tr")["<%=i+1%>"].setAttribute("data-start_at","<%=schedules[i].start_at%>");  
+                document.getElementsByTagName("tr")["<%=i+1%>"].setAttribute("data-end_at","<%=schedules[i].end_at%>");  
+            </script>
+          <% }  %> 
       <% } %>
     </tbody>
   </table>
-
+</div>
   <div class="container d-none" id="popover-content">
     <div class="row ">
       <div class="text-center ">
-        <form id="form-update" method="GET">
-        <button type="submit" class="popover-button btn btn-block btn-success button"><i class="fa fa-edit fa-lg"></i>Update</button>
-        </form>
+       
+        <button type="button" data-toggle="modal" data-target="#modal-update" class="popover-button btn btn-block btn-success button"><i class="fa fa-edit fa-lg"></i>Update</button>
+     
       </div>
       <div class=" text-center ">
-        <form id="form-remove" method="GET">
-        <button type="submit" class="popover-button btn btn-block btn-danger button"><i class="fa fa-trash fa-lg"></i>Remove</button>
-          </form>
+      
+        <button type="button" data-toggle="modal" data-target="#modal-delete" class="popover-button btn btn-block btn-danger button"><i class="fa fa-trash fa-lg"></i>Remove</button>
+          
       </div>
     </div>
   </div>
+  <%- include('../partials/modal_delete') %>
+  <%- include('../partials/modal_update') %>
  
+ 
+
+  
  
   <script>
-   
-$(document).ready(function(){
-      
+    $(document).ready(function(){
+
       $("[data-toggle=popover]").popover({
           "placement": 'bottom' 
           , "html": true
@@ -54,32 +61,64 @@ $(document).ready(function(){
           ,"content": function() {
             return $('#popover-content').html();
             }
-  });
+          }); 
+      $("[data-toggle=popover]").on('show.bs.popover', function (e) {
+        $("[data-toggle=popover]").not($(this)).popover('hide');
+        var id = $(e.target).data("id");
+        var date = $(e.target).data("date");
+        var start_at = $(e.target).data("start_at");
+        var end_at = $(e.target).data("end_at");
+       
+        
+        document.getElementById("modal-date").innerHTML = date;
+        document.getElementById("modal-start_at").innerHTML = start_at;
+        document.getElementById("modal-end_at").innerHTML = end_at;
+
+        var newdate = date.split("/").reverse().join("-");
+        document.getElementById("u-modal-date").setAttribute("value",newdate);
+        document.getElementById("u-modal-start_at").setAttribute("value",start_at);
+        document.getElementById("u-modal-end_at").setAttribute("value",end_at);
+        
+        
+        var url = "../schedule/delete/"+id;
+        document.getElementById("form-modal-delete").setAttribute("action", url);
+        url = "../schedule/update/"+id;
+        document.getElementById("form-modal-update").setAttribute("action", url);
+        
+      
+      });
+
+      $("#popover-table").on('wheel', function(event){
+        $('[data-toggle=popover]').popover('hide');
+      });
+
+      $(window).on('wheel', function(event){
+        $('[data-toggle=popover]').popover('hide');
+      });
+
+      $(document).mouseup(function(e) {
+        var container = $("#popover-table");
+
+        if (!container.is(e.target) && container.has(e.target).length === 0) {
+          $('[data-toggle=popover]').popover('hide');
+        }
+      });
+
+      $('#modal-delete').on('show.bs.modal', function (e) {
+        $('[data-toggle=popover]').popover('hide');
+      })
+
+      $('#modal-update').on('show.bs.modal', function (e) {
+        $('[data-toggle=popover]').popover('hide');
+      })
+      
+      $("#restore").on('click', function(event){
+        document.getElementById("form-modal-update").reset();
+
+      });
+     
+    
  
-  $("[data-toggle=popover]").on('show.bs.popover', function (e) {
-    $("[data-toggle=popover]").not($(this)).popover('hide');
-
-    var id = $(e.target).data("id");
-    var url = "../schedule/delete/"+id;
-    document.getElementById("form-remove").setAttribute("action", url);
-    url = "../schedule/update/"+id;
-    document.getElementById("form-update").setAttribute("action", url);
-  });
-
-
-
-$("#popover-table").on('wheel', function(event){
-  $('[data-toggle=popover]').popover('hide');
 });
 
-$(window).on('wheel', function(event){
-  $('[data-toggle=popover]').popover('hide');
-});
-
-
-
-
-});
-
- 
-    </script>
+</script>

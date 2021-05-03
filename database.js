@@ -47,6 +47,42 @@ new_schedule = async function(s){
     
 }
 
+delete_schedule = async function(id){
+
+    const result = await query("delete from schedules where id = ?",[id]);
+ 
+    if (result.affectedRows < 1)
+        throw "error";
+    
+}
+
+update_schedule = async function(id,date,start,end){
+    
+    const result = await query("update schedules set s_date = ?, start_at = ?, end_at = ? where id = ?",[date,start,end,id]);
+    console.log(result.affectedRows);
+    if (result.affectedRows < 1)
+        throw "error";
+    
+}
+
+check_email = async function(email){
+
+    const result = await query("select * from users where email = ?",[email]);
+    
+    if (result.length !== 0)
+        throw "error";
+    
+}
+
+db_signup = async function(u){
+    
+    const result = await query("insert into users (email,firstname,lastname,pass) values (?,?,?,?)",[u.email,u.firstname,u.lastname,u.password]);
+    
+    if (result.length > 0)
+        throw "error";
+    
+}
+
 module.exports = {
     connection: function(){
         connection.connect(function(err) {
@@ -59,6 +95,10 @@ module.exports = {
     schedules,
     user,
     user_schedules,
-    new_schedule
+    new_schedule,
+    delete_schedule,
+    update_schedule,
+    check_email,
+    db_signup
 }
 

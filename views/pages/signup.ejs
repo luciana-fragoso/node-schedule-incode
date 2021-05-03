@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <%- include('../partials/head') %>
+  </head>
+
+  <body>
+    <form method="POST" action="../signup">
+    <%- include('../partials/navbar') %>
+    <div class="container-fluid bg-light w-100">
+      <div class="main mx-auto">
+      <a class="title-link" href="../signup"><h1 class="subtitle text-dark font-weight-bold mt-3">Sign up</h1></a>
+      <%- include('../partials/alert') %>
+        <div class="mx-auto">
+            <div class="my-row mt-0">
+                <div class="my-column mr-5">
+                    
+            <h6 class="font-weight-bold">E-mail</h6>     
+            <div class="input-group w-100">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"> <i class="fa fa-at"></i></span>
+                </div>
+                <input  class="form-control" type="email" name="email" id="email" required/>
+            </div>
+            
+            <h6 class="font-weight-bold mt-3">Firstname</h6> 
+            <div class="input-group w-100">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"> <i class="fa fa-address-book-o"></i></span>
+                </div>
+                <input  class="form-control" type="text" name="firstname" id="firstname" required/>
+            </div>
+
+            <h6 class="font-weight-bold mt-3">Lastname</h6> 
+            <div class="input-group w-100">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"> <i class="fa fa-address-book-o"></i></span>
+                </div>
+                <input  class="form-control " type="text" name="lastname" id="lastname" required />
+            </div>
+      
+ </div>
+
+    <div class="my-column mr-5">
+            <h6 class="font-weight-bold input-password">Password</h6> 
+            <div class="input-group w-100">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"> <i class="fa fa-lock"></i></span>
+                </div>
+                <input  class="form-control " type="password" name="password" id="password"  required/>
+            </div>
+            
+        
+            <h6 class="font-weight-bold mt-3">Confirm password</h6>
+            <div class="input-group w-100">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"> <i class="fa fa-lock"></i></span>
+                </div>
+                <input  class="form-control" type="password" name="confirm" id="confirm" required/>
+            </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row">  
+                <div class="col text-center ">       
+                    <button type="submit" class="btn btn-secondary w-25 mt-4 pb-2 button">OK</button>
+                </div>
+            </div>
+        </div> 
+    </div>
+      
+    <% if (locals.data) {%>
+       <script>
+            document.getElementById("email").value = "<%= data.email%>";
+            document.getElementById("firstname").value = "<%= data.firstname%>";
+            document.getElementById("lastname").value = "<%= data.lastname%>";
+       </script>
+        <% } %>
+     
+    </div>
+
+  </form>
+
+  </body>
+</html>
