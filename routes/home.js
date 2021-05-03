@@ -3,7 +3,8 @@ const db = require('../database');
 const Schedule = require('../model/Schedule');
 const User = require('../model/User');
 const util = require("../util");
-var nodemailer = require('nodemailer');
+const nodemailer = require('nodemailer');
+const validator = require("../password");
 
 
 
@@ -43,20 +44,22 @@ router.get('/user/:id',async function(req,res) {
             
             res.render("pages/user",{user_detail:detailedUser,schedules:result,message:message,type:r});
     } catch {
-        res.render("pages/user",{message:"Not able to retrieve this user's details"});
+        res.render("pages/user",{message:"Not able to retrieve this user's details",type:"error"});
     }
 }
 });
 
 
 
-/* Acess routes - login and logout */
+/* Acess routes - signup, login and logout */
 
 router.get('/signup',function(req,res) {
     res.render("pages/signup");
 });
 
 router.post('/signup', async function(req,res) {
+
+   
     
     const info = req.body;
     
@@ -65,42 +68,55 @@ router.post('/signup', async function(req,res) {
     const lastname = info.lastname;
     const password = info.password;
     const confirm = info.confirm;
-
     
-   
-    var message = "",type="signup",r;
-    try {
-        await db.check_email(email);
+    if (emptyCheck(firstname) || specialCharCheck(firstname)|| emptyCheck(lastname) || specialCharCheck(lastname))  {
+        info.firstname = "";
+        info.lastname = "";
+        res.render("pages/signup",{message:"Please,provide a valid firstname and lastname",type:"error",data:info}); 
+    } 
+     
+    else {
+        var message = "",type="signup",r;
         
-        if (password !== confirm){
-            r = "different";
-          
-            message = util.getMessage(type,r);
-            res.render("pages/signup",{message:message,type:r,data:info});  
-        } 
-        var newUser = new User("",firstname,lastname,email,password);
         try {
-            await db_signup(newUser);
-            console.log(newUser.firstname);
-            console.log(firstname);
-            try { sendEmail("YOUR-EMAIL@gmail.com",newUser.firstname);
-            } catch {
+            await db.check_email(email);
+            if (password !== confirm) { 
+                r = "different";
+                message = util.getMessage(type,r);
+                res.render("pages/signup",{message:message,type:r,data:info});  
+            } else { // passwords are the same
                 
+                if(!validator.schema.validate(password)) {
+                    let msg = "Your passwords is not strong enough. The following rules are missing: "+validator.schema.validate(password, { list: true });
+                    res.render("pages/signup",{message:msg,type:"error",data:info});  
+                }
+                  
+                else {
+                var newUser = new User("",firstname,lastname,email,password);
+                try {
+                    await db_signup(newUser);
+                    try {
+                        sendEmail("YOUR-EMAIL@gmail.com",newUser.firstname)
+                        res.redirect("/");
+                    } catch {
+                        //e-mail not sent  
+                    }
+                } catch {
+                    r =  "error_";
+                    message = util.getMessage(type,r);
+                    res.render("pages/signup",{message:message,type:r});  
+                }
             }
-            
-            res.redirect("/");
-        } catch {
-            r =  "error_";
+            }
+
+
+        } catch { // e-mail not available
+            r = "error";
             message = util.getMessage(type,r);
             res.render("pages/signup",{message:message,type:r});  
         }
 
-    } catch {
-        r = "error"
-        message = util.getMessage(type,r);
-        res.render("pages/signup",{message:message,type:r});  
-    } 
-    
+    }
    
 });
 
@@ -131,9 +147,9 @@ router.post('/login', async function(req,res)   {
             res.redirect("/");
            
         } else
-            res.render("pages/login",{message: 'Wrong password'})
+            res.render("pages/login",{message: 'Wrong password',type:"error"})
         } catch (err) {
-            res.render("pages/login",{message: 'User not found'})
+            res.render("pages/login",{message: 'User not found',type:"error"})
         }
  
 });
@@ -247,4 +263,17 @@ function sendEmail(email,firstname){
    
       transporter.sendMail(mailOptions, function(error, info){
       });
+}
+
+// returns true if string is empty
+function emptyCheck(field){
+   
+    return (!field || /^\s*$/.test(field));
+}
+
+// returns true if string has special char
+function specialCharCheck(field){
+    var regex = /^[a-zA-Z\s]*$/;
+   
+    return (!regex.test(field));
 }

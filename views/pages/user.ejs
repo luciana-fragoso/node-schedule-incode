@@ -13,11 +13,12 @@
       <h5>Firstname -  <span class="font-weight-normal"><%= locals.user_detail.firstname %></span></h5>
       <h5>Lastname - <span class="font-weight-normal"><%= locals.user_detail.lastname %> </span></h5>
       <h5>E-mail - <span class="font-weight-normal"><%= locals.user_detail.email %></span></h5>
-      <% } else { %>
-        <h2><%= locals.message %></h2>
-      <% } %>
       <%- include('../partials/alert') %>
       <%- include('../partials/user_schedules') %>  
+      <% } else { %>
+        <%- include('../partials/alert') %>
+      <% } %>
+      
     
     </div>
  </div>
