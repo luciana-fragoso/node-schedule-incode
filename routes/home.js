@@ -63,7 +63,7 @@ router.post('/signup', async function(req,res) {
                 try {
                     await db_signup(newUser);
                     try {
-                        util.sendEmail("luhciana@gmail.com",newUser.firstname)
+                        util.sendEmail(email,newUser.firstname)
                         res.redirect("/");
                     } catch {
 

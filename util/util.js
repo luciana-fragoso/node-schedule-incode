@@ -49,14 +49,14 @@ sendEmail = function sendEmail(email,firstname) {
     var transporter = nodemailer.createTransport({
         service: 'Gmail',
         auth: {
-          user: 'luhciana@gmail.com',
-          pass: 'lauragrandma99'
+          user: 'your-email@gmail.com',
+          pass: 'your-password'
         }
       });
 
       var mailOptions = {
-        from: 'luhciana@gmail.com',
-        to: "luhciana@gmail.com",
+        from: 'your-email@gmail.com',
+        to: email,
         subject: 'Welcome',
         text: 'Hello '+firstname+"! Welcome to our webapp."
       };
