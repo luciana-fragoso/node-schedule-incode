@@ -1,5 +1,3 @@
-const nodemailer = require('nodemailer');
-
 getMessage =  function(type,r){
     var message;
     if (r === "success"){
@@ -44,30 +42,11 @@ emptyCheck = function emptyCheck(field){
     return (!field || /^\s*$/.test(field));
 }
 
-sendEmail = function sendEmail(email,firstname) {
 
-    var transporter = nodemailer.createTransport({
-        service: 'Gmail',
-        auth: {
-          user: 'your-email@gmail.com',
-          pass: 'your-password'
-        }
-      });
-
-      var mailOptions = {
-        from: 'your-email@gmail.com',
-        to: email,
-        subject: 'Welcome',
-        text: 'Hello '+firstname+"! Welcome to our webapp."
-      };
-   
-      transporter.sendMail(mailOptions, function(error, info){
-      });
-}
 
 module.exports = {
     getMessage,
     specialCharCheck,
     emptyCheck, 
-    sendEmail
+    
 }

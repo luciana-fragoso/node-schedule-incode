@@ -2,7 +2,9 @@ var express = require('express');
 const app = express();
 const dateFormat = require("dateformat");
 const session = require('express-session');
-const jwt = require('jsonwebtoken');
+
+
+
 
 
 const homeRoute = require('./routes/home');

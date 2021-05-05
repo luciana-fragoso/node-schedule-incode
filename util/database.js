@@ -11,10 +11,17 @@ const query = util.promisify(connection.query).bind(connection);
 login = async function(email) {
         const result = await query("SELECT * FROM users WHERE email = ?",[email]);
         if (result.length > 0) {          
-            return result[0];
+            const newResult = await query("select user_status from user_code where user_id = ?",[result[0].id]);
+            if (newResult.length > 0)
+                if (newResult[0].user_status === 'a')
+                    return result[0];
+                else {
+                    return 0;
+                }
+                   
         }
           
-        throw "error";   
+        return -1;   
 }
 
 schedules = async function(){
@@ -59,7 +66,7 @@ delete_schedule = async function(id){
 update_schedule = async function(id,date,start,end){
     
     const result = await query("update schedules set s_date = ?, start_at = ?, end_at = ? where id = ?",[date,start,end,id]);
-    console.log(result.affectedRows);
+    
     if (result.affectedRows < 1)
         throw "error";
     
@@ -78,13 +85,25 @@ check_email = async function(email){
     
 }
 
-db_signup = async function(u){
+db_signup = async function(u,code){
     
     const result = await query("insert into users (email,firstname,lastname,pass) values (?,?,?,?)",[u.email,u.firstname,u.lastname,u.password]);
+    if (result.affectedRows === 1){
+        const newResult = await query("insert into user_code (user_id,user_status,temp_code) values (?,?,?)",[parseInt(result.insertId),'w',code]);
+        if (newResult.affectedRows === 1 )
+            return true;
+    } 
+    return false;
     
-    if (result.length > 0)
-        throw "error";
-    
+}
+
+activate = async function(code){
+    const result = await query("select * from user_code where temp_code = ?",[code]);
+    if (result.length === 1){
+        const newResult = await query("update user_code set user_status = ? where id = ?",['a',parseInt(result[0].id)]);
+        if (newResult.affectedRows === 1 )
+            return true;
+    } return false;
 }
 
 module.exports = {
@@ -103,6 +122,7 @@ module.exports = {
     delete_schedule,
     update_schedule,
     check_email,
-    db_signup
+    db_signup,
+    activate
 }
 

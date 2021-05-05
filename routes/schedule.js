@@ -48,8 +48,10 @@ router.post('/update/:id', async function(req,res)   {
         url = "/user/"+req.session.user;
     else if (req.headers.referer.includes("schedule"))
         url = "/schedule";
-
-    if (req.session.user){
+    if (!req.session.user){
+        res.redirect("/"); 
+    }
+    else if (req.session.user) {
         let new_date = req.body.date;
         let new_start = req.body.start_at;
         let new_end = req.body.end_at;
@@ -78,8 +80,8 @@ router.post('/update/:id', async function(req,res)   {
         res.redirect(url+"?type="+type+"&result="+r);
         } 
     }
-    else 
-        res.redirect("/"); 
+   
+        
         
 });
 

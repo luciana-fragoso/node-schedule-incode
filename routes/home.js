@@ -4,8 +4,9 @@ const db = require('../util/database');
 const util = require("../util/util");
 const validator = require("../util/password");
 const User = require("../model/User");
-
-
+const mail = require("../config/nodemailer.config");
+const config = require("../config/auth.config");
+var jwt = require("jsonwebtoken");
 
 router.get('/', async function(req,res) {
     if (req.session.user){
@@ -61,12 +62,14 @@ router.post('/signup', async function(req,res) {
             else {
                 var newUser = new User("",firstname,lastname,email,password);
                 try {
-                    await db_signup(newUser);
-                    try {
-                        util.sendEmail(email,newUser.firstname)
+                   
+                    let confirmationCode = jwt.sign({email: newUser.email}, config.secret);
+                    await db.db_signup(newUser,confirmationCode);
+                    try {  
+                        mail.sendConfirmationEmail(newUser.firstname,newUser.email,confirmationCode);
                         res.redirect("/");
                     } catch {
-
+                        console.log("Error sending the e-mail");
                     }
                 }
                 catch {
@@ -95,9 +98,14 @@ router.post('/login', async function(req,res)   {
     var email = user.email;
     let password = user.password;
     //let password = crypto.createHmac("sha256","encrypted message").update(user.password).digest('hex');
-    try {
+   
         let returnedUser = await db.login(email);
-        let returnedId = returnedUser.id;
+        if (returnedUser === -1){
+            res.render("pages/login",{message: 'User not found',type:"error"})
+        } else if (returnedUser === 0) {
+            res.render("pages/login",{message: 'A verification e-mail has been sent',type:"error"})
+        } else {
+            let returnedId = returnedUser.id;
         let returnedPassword = returnedUser.pass;
         let returnedFirstname = returnedUser.firstname;
         let returnedLastname = returnedUser.lastname;   
@@ -108,10 +116,9 @@ router.post('/login', async function(req,res)   {
             res.redirect("/");
            
         } else
-            res.render("pages/login",{message: 'Wrong password',type:"error"})
-        } catch (err) {
-            res.render("pages/login",{message: 'User not found',type:"error"})
+        res.render("pages/login",{message: 'Wrong password',type:"error"})
         }
+        
  
 });
 
@@ -120,7 +127,13 @@ router.get('/logout',function(req,res) {
     res.redirect("/");
 });
 
-
+router.get('/confirm/:confirmationCode', async function(req,res) {
+  
+ if (await db.activate(req.params.confirmationCode)) {
+     res.redirect("/")
+ } else 
+ res.send("code not found");
+});
 
 module.exports = router;
 
