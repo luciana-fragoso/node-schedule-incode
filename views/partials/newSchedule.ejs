@@ -1,5 +1,5 @@
 <form method="POST" action="../schedule/new">
-      
+         
       <div class="border border-secondary mt-4 rounded p-4 column-height">
         
         <h3 class="subtitle text-dark font-weight-bold mb-1 text-center">New schedule</h3>
@@ -7,7 +7,11 @@
         
         <div class="new-schedule w-75 mt-3 mx-auto">
           <label for="date" class="font-weight-bold mb-1">Date</label>
-          <input class="form-control" type="date" id="date" name="date"  max="9999-12-31" required>
+          <input class="form-control" type="date" id="date" name="date" max="9999-12-31" required>
+          <script>
+            var today = new Date().toISOString().split('T')[0];
+            document.getElementsByName("date")[0].setAttribute('min', today);
+          </script>
         </div>
 
         <div class="w-75 mx-auto">

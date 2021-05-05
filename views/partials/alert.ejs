@@ -1,7 +1,7 @@
 <div id="alert" role="alert">
     <% if (locals.message) { %>
                  
-      <% if ((type === "error") || (type === "different") || (type === "error_")){ %>
+      <% if ((type === "error") || (type === "different") || (type === "error_") || (type === "short") || (type === "overlap")){ %>
           <script>
               document.getElementById("alert").setAttribute("class","alert alert-dismissible fade show alert-danger");
           </script>

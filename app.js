@@ -2,10 +2,13 @@ var express = require('express');
 const app = express();
 const dateFormat = require("dateformat");
 const session = require('express-session');
-
+const jwt = require('jsonwebtoken');
 
 
 const homeRoute = require('./routes/home');
+const userRoute = require('./routes/user');
+const scheduleRoute = require('./routes/schedule');
+
 
 
 
@@ -14,7 +17,7 @@ app.use(session({
     secret: "my-secret", // Secret key,
     saveUninitialized: false,
     cookie : {
-        maxAge: 1000 * 60 * 60 *24 * 365
+        maxAge: 1000 * 60 * 60 * 24 * 365
     },
     resave: false
 }));
@@ -30,6 +33,8 @@ app.use(express.static(__dirname + '/public'));
 
 
 app.use('/',homeRoute);
+app.use('/schedule',scheduleRoute);
+app.use('/user',userRoute);
 
 
 app.listen(3000,function() {});
