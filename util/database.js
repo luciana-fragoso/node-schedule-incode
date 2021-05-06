@@ -75,12 +75,13 @@ update_schedule = async function(id,date,start,end){
 check_email = async function(email){
 
     const result = await query("select * from users where email = ?",[email]);
-
-    if (result.length !== 0) {
+   
+    if (result.length === 0) {
         throw "error";
     }
-
-    return true;
+    else 
+    
+    return result[0];
        
     
 }
@@ -100,12 +101,44 @@ db_signup = async function(u,code){
 activate = async function(code){
     const result = await query("select * from user_code where temp_code = ?",[code]);
     if (result.length === 1){
-        const newResult = await query("update user_code set user_status = ? where id = ?",['a',parseInt(result[0].id)]);
-        if (newResult.affectedRows === 1 )
+        if (result[0].user_status === 'w') {
+            const newResult = await query("update user_code set user_status = ? where id = ?",['a',parseInt(result[0].id)]);
+            if (newResult.affectedRows === 1 )
             return true;
+        }
     } return false;
 }
 
+fogottten_password = async function(email,code){
+    const result = await query("select * from users where email = ?",[email]);
+    if (result.length === 1){
+        const newResult = await query("insert into user_code (user_id,user_status,temp_code) values (?,?,?)",[parseInt(result[0].id),'r',code]);
+        if (newResult.affectedRows === 1 )
+            return true;
+    } 
+    return false;
+}
+reset = async function(code){
+    const result = await query("select * from user_code where temp_code = ?",[code]);
+    if (result.length === 1){
+        if (result[0].user_status === 'r') {
+            const newResult = await query("update user_code set user_status = ? where id = ?",['d',parseInt(result[0].id)]);
+        if (newResult.affectedRows === 1 )
+            return result[0].user_id;
+        }
+    } return false;
+}
+
+change_password = async function(id,password){
+    const result = await query("update users set pass = ? where id = ?",[password,parseInt(id)]);
+    
+    if  (result.affectedRows === 0){
+        console.log("aqui");
+        throw "error";
+    }
+    console.log("sucesso");
+    return true;
+}
 module.exports = {
     connection: function(){
         connection.connect(function(err) {
@@ -123,6 +156,9 @@ module.exports = {
     update_schedule,
     check_email,
     db_signup,
-    activate
+    activate,
+    fogottten_password,
+    change_password,
+    reset
 }
 

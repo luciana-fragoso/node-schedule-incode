@@ -58,14 +58,28 @@
                 </div>
                 <input  class="form-control" type="password" name="confirm" id="confirm" required/>
             </div>
+           
             </div>
+            
+            
+           
         </div>
         <div class="container">
             <div class="row">  
                 <div class="col text-center ">       
                     <button type="submit" class="btn btn-secondary w-25 mt-4 pb-2 button">OK</button>
+                   
                 </div>
             </div>
+            <div class="input-group w-100">
+                <p>Password must meet the following requirements</p>
+            </div>
+            <ul class="list-unstyled">
+                <li> - Between 8 and 100 characters</li>
+                <li> - No blank spaces</li>
+                <li> - At least 2 digits and 1 special character</li>
+                <li> - At least 1 Uppercase and Lowercase character</li>
+            </ul>
         </div> 
     </div>
       
@@ -78,7 +92,7 @@
         <% } %>
      
     </div>
-
+</div>
   </form>
 
   </body>

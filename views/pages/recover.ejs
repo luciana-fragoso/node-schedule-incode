@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <%- include('../partials/head') %>
+  </head>
+
+  <body>
+    <%- include('../partials/navbar') %>
+
+    <form method="POST" action="../recover"> 
+    <div class="container-fluid bg-light w-100">
+      <div class="main mx-auto">
+       
+      <a class="title-link" href="../recover"><h1 class="subtitle text-dark font-weight-bold mt-3">Password Recover</h1></a>
+      <%- include('../partials/alert') %>
+      
+    <div class="input-group mt-3 mx-auto">
+        <div class="input-group-prepend">
+            <span class="input-group-text"> <i class="fa fa-at" ></i></span>
+        </div>
+        <input type="email" class="form-control" id="email" placeholder="email"  name="email" required>
+    </div>
+    <div class="container">
+        <div class="row">  
+            <div class="col text-center ">       
+                <button type="submit" class="btn btn-secondary w-25 mt-4 pb-2 button">OK</button>
+               
+            </div>
+        </div>
+    </div>   
+    </div>
+  </div>
+  </form>
+  </body>
+</html>

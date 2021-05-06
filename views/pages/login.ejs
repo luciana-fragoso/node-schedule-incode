@@ -5,13 +5,14 @@
   </head>
 
   <body>
-    <form method="POST" action="../login">
     <%- include('../partials/navbar') %>
+
+    <form method="POST" action="../login"> 
     <div class="container-fluid bg-light w-100">
       <div class="main mx-auto">
-        <%- include('../partials/alert') %>
+       
       <a class="title-link" href="../login"><h1 class="subtitle text-dark font-weight-bold mt-3">Login</h1></a>
-      
+      <%- include('../partials/alert') %>
       <div class="input-group mt-3 mx-auto">
         <div class="input-group-prepend">
             <span class="input-group-text"> <i class="fa fa-user"></i></span>
@@ -28,12 +29,12 @@
         <div class="row">  
             <div class="col text-center ">       
                 <button type="submit" class="btn btn-secondary w-25 mt-4 pb-2 button">OK</button>
+                <a href="../recover"><h6 class="mt-3 text-primary">Forgotten your password?</h6></a>
             </div>
         </div>
     </div>   
     </div>
-
+  </div>
   </form>
-
   </body>
 </html>
