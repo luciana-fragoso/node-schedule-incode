@@ -35,9 +35,15 @@ router.post('/recover',async function(req,res) {
         let confirmationCode = jwt.sign({email: req.body.email}, config.secret);
         message = "A passwor reset link was sent to your e-mail" ;
         await db.fogottten_password(req.body.email,confirmationCode);
-        
-        mail.sendPasswordResetLink(name,email,confirmationCode);   
-        res.render("pages/recover",{message:message,type:"success"});
+       try {
+            await mail.sendPasswordResetLink(name,email,confirmationCode); 
+            res.render("pages/recover",{message:message,type:"success"}); 
+       } catch {
+        res.render("pages/recover",{message:"Unable to send e-mail",type:"error"}); 
+           console.log("Reset password e-mail not sent, check credentials");
+       }
+         
+     
     } catch {
         message = "This e-mail is not registered in our system";
         res.render("pages/recover",{message:message,type:"error"});
@@ -131,10 +137,10 @@ router.post('/signup', async function(req,res) {
                         
                         await db.db_signup(newUser,confirmationCode);
                         try {  
-                            mail.sendConfirmationEmail(newUser.firstname,newUser.email,confirmationCode);
+                            await mail.sendConfirmationEmail(newUser.firstname,newUser.email,confirmationCode);
                             res.redirect("/");
                         } catch {
-                            console.log("Error sending the e-mail");
+                            res.render("pages/signup",{message:"Unable to send e-mail",type:"error"});  
                         }
                     }
                     catch {
