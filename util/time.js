@@ -14,6 +14,17 @@ checkDateOverlapping = async function(id,date,start,end) {
         return 0;
     }
     
+    if (result.length === 1){
+        let time = result[0].start_at;
+        let start_hour = time.split(":")[0];
+        let start_minute = time.split(":")[1];
+
+        new_minute = start.split(":")[1];
+
+        if (new_minute < start_minute){
+            return -2;
+        }
+    }
     for (var i = 0; i < result.length; i++) {
         if (result[i].id !== id) {
         let formattedDate = dateFormat(result[i].s_date,"yyyy-mm-dd");
@@ -32,7 +43,7 @@ checkDateOverlapping = async function(id,date,start,end) {
     return 0;
 }
 
-checkTimeOverlapping = function(new_start,new_end,start,end) { 
+checkTimeOverlapping = function(new_start,end) { 
     new_start+=":00";
    
     let start_hour = new_start.split(":")[0];

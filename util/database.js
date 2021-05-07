@@ -13,23 +13,22 @@ login = async function(email) {
         if (result.length > 0) {          
             const newResult = await query("select user_status from user_code where user_id = ?",[result[0].id]);
             if (newResult.length > 0)
-                if (newResult[0].user_status === 'a')
+                if (newResult[0].user_status === 'a') {
                     return result[0];
+                }
+                   
                 else {
                     return 0;
                 }
                    
         }
           
-        return -1;   
+        return -1;
 }
 
 schedules = async function(){
     const result = await query ("select u.id,u.firstname,u.lastname,u.email,s.start_at,s.end_at, s.s_date from users u, schedules s where s.user_id = u.id order by u.email, s.s_date;")
-    if (result.length > 0) {
-        return result;
-    }
-    throw "error";
+    return result; 
 
 }
 

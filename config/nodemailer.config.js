@@ -1,7 +1,7 @@
 const nodemailer = require("nodemailer");
 const config = require("../config/auth.config");
 
-const user = "YOUR-EMAIL@gmail.com";
+const user = "YOUR-EMAIL.gmail.com";
 const pass = "YOUR-PASSWORD";
 
 

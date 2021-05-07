@@ -5,17 +5,25 @@ const util = require("../util/util");
 const validator = require("../util/password");
 const User = require("../model/User");
 const mail = require("../config/nodemailer.config");
+const crypto = require('crypto');
 const config = require("../config/auth.config");
 var jwt = require("jsonwebtoken");
+const { user, reset } = require('../util/database');
 var user_id = "";
 
 router.get('/', async function(req,res) {
-    if (req.session.user){
+    let sessionSchedules;
+    
+
+    if (req.session.user) {
             var schedules = await db.schedules(); 
+            sessionSchedules = schedules;
           
     }
-    let sessionSchedules = schedules;
-    res.render("pages/index",{schedules:sessionSchedules});  
+   
+res.render("pages/index",{schedules:sessionSchedules});
+   
+    
 });
 
 router.get('/recover',function(req,res) {
@@ -75,7 +83,8 @@ router.get('/reset/:confirmationCode', async function(req,res) {
     else {
         
        try {
-           await db.change_password(user_id,first);
+        let encrypted = crypto.createHmac("sha256","encrypted message").update(first).digest('hex');
+           await db.change_password(user_id,encrypted);
            res.redirect("/login");
        }
        catch {
@@ -130,7 +139,8 @@ router.post('/signup', async function(req,res) {
                 } 
     
                 else {
-                    var newUser = new User("",firstname,lastname,email,password);
+                    let encrypted = crypto.createHmac("sha256","encrypted message").update(password).digest('hex');
+                    var newUser = new User("",firstname,lastname,email,encrypted);
                     try {
                        
                         let confirmationCode = jwt.sign({email: newUser.email}, config.secret);
@@ -171,7 +181,7 @@ router.post('/login', async function(req,res)   {
     var user = req.body;
     var email = user.email;
     let password = user.password;
-    //let password = crypto.createHmac("sha256","encrypted message").update(user.password).digest('hex');
+    let encrypted = crypto.createHmac("sha256","encrypted message").update(user.password).digest('hex');
    
         let returnedUser = await db.login(email);
         if (returnedUser === -1){
@@ -181,10 +191,8 @@ router.post('/login', async function(req,res)   {
         } else {
             let returnedId = returnedUser.id;
         let returnedPassword = returnedUser.pass;
-        let returnedFirstname = returnedUser.firstname;
-        let returnedLastname = returnedUser.lastname;   
-    
-        if (password === returnedPassword){
+       
+        if (encrypted === returnedPassword){
             req.session.user=returnedId;
             
             res.redirect("/");
@@ -192,7 +200,7 @@ router.post('/login', async function(req,res)   {
         } else
         res.render("pages/login",{message: 'Wrong password',type:"error"})
         }
-        
+   
  
 });
 
