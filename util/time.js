@@ -2,65 +2,75 @@ const db = require('../util/database');
 const dateFormat = require("dateformat");
 
 
-checkDateOverlapping = async function(id,date,start,end) {
-    
+checkDateOverlapping = async function(user_id,id,date,start,end) {
+ 
     if (!checkDuration(start,end)){
         return -1;
     }
       
-    const result = await db.user_schedules(id);
+    const result = await db.user_schedules(user_id);
        
-    if (result.length === 0) {
-        return 0;
-    }
+        
     
-    if (result.length === 1){
-        let time = result[0].start_at;
-        let start_hour = time.split(":")[0];
-        let start_minute = time.split(":")[1];
-
-        new_minute = start.split(":")[1];
-
-        if (new_minute < start_minute){
-            return -2;
-        }
-    }
     for (var i = 0; i < result.length; i++) {
         if (result[i].id !== id) {
-        let formattedDate = dateFormat(result[i].s_date,"yyyy-mm-dd");
+            let formattedDate = dateFormat(result[i].s_date,"yyyy-mm-dd");
+        
         if (date < formattedDate || date > formattedDate) {
-            // if date smaller than the smallest date on the database
             return 0;
         }
             
         else if (date === formattedDate) {
-           
-            if (!checkTimeOverlapping(start,end,result[i].start_at,result[i].end_at))
+            if (!checkTimeOverlapping(date,start,end,result[i].start_at,result[i].end_at))
                 return -2;
         } 
-    }
+    
+        }
+        
 }
     return 0;
 }
 
-checkTimeOverlapping = function(new_start,end) { 
+
+
+checkTimeOverlapping = function(date,new_start,new_end,old_start,old_end) { 
     new_start+=":00";
-   
-    let start_hour = new_start.split(":")[0];
-    let end_hour = end.split(":")[0];
+    new_end+=":00";
 
-    if (start_hour < end_hour)
-        return false;
+    let new_start_hour = new_start.split(":")[0];
+    let new_start_minute = new_start.split(":")[1];
 
-    if (start_hour > end_hour)
+    let new_end_hour = new_end.split(":")[0];
+    let new_end_minute = new_end.split(":")[1];
+
+    let old_start_hour = old_start.split(":")[0];
+    let old_start_minute = old_start.split(":")[1];
+
+    let old_end_hour = old_end.split(":")[0];
+    let old_end_minute = old_end.split(":")[1];
+
+    let year = date.split("-")[0];
+    let month = date.split("-")[1];
+    let day = date.split("-")[2];
+
+    var d1 = new Date(year,month,day,new_end_hour,new_end_minute,"00");
+    var d2 = new Date(year,month,day,old_start_hour,old_start_minute,"00");
+
+    var d3 = new Date(year,month,day,new_start_hour,new_start_minute,"00");
+    var d4 = new Date(year,month,day,old_end_hour,old_end_minute,"00");
+
+    if ((d1<=d2) || (d3>=d4))
         return true;
+
+    return false;
+
+   
+
+   
+   
+
+
     
-    else {
-        let start_min = new_start.split(":")[1];
-        let end_min = end.split(":")[1];   
-        
-        return (start_min >= end_min) ;
-    }
    
 }
 

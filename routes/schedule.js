@@ -6,6 +6,9 @@ const time = require("../util/time");
 const Schedule = require('../model/Schedule');
 
 router.get('/', async function(req,res) {
+    
+
+    
     if (req.session.user){
         var type = req.query.type;
         var r = req.query.result;
@@ -15,9 +18,9 @@ router.get('/', async function(req,res) {
         var result = await db.user_schedules(req.session.user);  
         res.render("pages/user_page",{schedules:result,message:message,type:r});
 
-    } else {
+} else {
         res.redirect("/");
-    } 
+   } 
 });
 
 router.post('/delete/:id', async function(req,res)   {
@@ -55,7 +58,7 @@ router.post('/update/:id', async function(req,res)   {
         let new_date = req.body.date;
         let new_start = req.body.start_at;
         let new_end = req.body.end_at;
-        
+        console.log(new_date);
         const output = await time.checkDateOverlapping(req.session.user,req.params.id,new_date,new_start,new_end);
         
         if (output === -1){
@@ -91,7 +94,7 @@ router.post('/new', async function(req,res)   {
     var type = "add", r;
 
     var s = new Schedule(parseInt(req.session.user),aux.date,aux.start_at,aux.end_at);
-    const output = await time.checkDateOverlapping(req.session.user,aux.date,aux.start_at,aux.end_at);
+    const output = await time.checkDateOverlapping(req.session.user,"",aux.date,aux.start_at,aux.end_at);
     
     if (output === -1) {
         type = "short";
